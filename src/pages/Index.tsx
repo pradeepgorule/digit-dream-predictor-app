@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import NumberGrid from '@/components/NumberGrid';
 import JodiInput from '@/components/JodiInput';
 import PredictionHistory from '@/components/PredictionHistory';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import WalletComponent from '@/components/Wallet';
-import { TrendingUp } from 'lucide-react';
+import Admin from './Admin';
+import { TrendingUp, Settings, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 interface Prediction {
   id: string;
@@ -23,6 +24,7 @@ const Index = () => {
   const [latestSingle, setLatestSingle] = useState<number | null>(null);
   const [latestJodi, setLatestJodi] = useState<string | null>(null);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [currentView, setCurrentView] = useState<'user' | 'admin'>('user');
   const { toast } = useToast();
 
   const addPrediction = (type: 'single' | 'jodi', number: string, betAmount: number) => {
@@ -84,18 +86,58 @@ const Index = () => {
     }
   };
 
+  if (currentView === 'admin') {
+    return (
+      <div>
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg">
+                  <BarChart3 className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                  Admin Dashboard
+                </h1>
+              </div>
+              <Button 
+                onClick={() => setCurrentView('user')}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <TrendingUp className="h-4 w-4" />
+                Back to User View
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Admin predictions={predictions} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg">
-              <TrendingUp className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Number Prediction Hub
+              </h1>
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Number Prediction Hub
-            </h1>
+            <Button 
+              onClick={() => setCurrentView('admin')}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Settings className="h-4 w-4" />
+              Admin View
+            </Button>
           </div>
         </div>
       </div>
