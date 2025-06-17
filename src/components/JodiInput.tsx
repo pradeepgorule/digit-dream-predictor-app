@@ -42,10 +42,10 @@ const JodiInput = ({ value, onChange, onSubmit }: JodiInputProps) => {
           disabled={value.length !== 2}
           className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6"
         >
-          Predict
+          Predict (₹10)
         </Button>
       </div>
-      <p className="text-sm text-gray-500 mt-2">Enter a number from 00 to 99</p>
+      <p className="text-sm text-gray-500 mt-2">Enter a number from 00 to 99 • Cost: ₹10 per prediction</p>
     </div>
   );
 };
