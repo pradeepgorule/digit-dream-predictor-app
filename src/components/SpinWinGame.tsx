@@ -22,15 +22,16 @@ const SpinWinGame = () => {
   const [wheelRotation, setWheelRotation] = useState(0);
   const { toast } = useToast();
 
-  // Wheel segments with different multipliers and probabilities
+  // Wheel segments with different multipliers and probabilities - increased high multiplier chances
   const wheelSegments = [
-    { multiplier: 2, probability: 30, color: 'bg-green-500' },
-    { multiplier: 3, probability: 25, color: 'bg-blue-500' },
-    { multiplier: 5, probability: 20, color: 'bg-yellow-500' },
-    { multiplier: 10, probability: 15, color: 'bg-orange-500' },
-    { multiplier: 15, probability: 5, color: 'bg-red-500' },
-    { multiplier: 20, probability: 3, color: 'bg-purple-500' },
-    { multiplier: 30, probability: 2, color: 'bg-pink-500' },
+    { multiplier: 2, probability: 25, color: 'bg-green-500' },
+    { multiplier: 3, probability: 20, color: 'bg-blue-500' },
+    { multiplier: 5, probability: 15, color: 'bg-yellow-500' },
+    { multiplier: 10, probability: 12, color: 'bg-orange-500' },
+    { multiplier: 15, probability: 10, color: 'bg-red-500' },
+    { multiplier: 20, probability: 8, color: 'bg-purple-500' },
+    { multiplier: 25, probability: 6, color: 'bg-pink-500' },
+    { multiplier: 30, probability: 4, color: 'bg-indigo-500' },
   ];
 
   const MAX_DAILY_EARNINGS = 200;
@@ -187,11 +188,11 @@ const SpinWinGame = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Wheel */}
+          {/* Wheel - Made larger */}
           <div className="flex justify-center">
             <div className="relative">
               <div 
-                className={`w-64 h-64 rounded-full border-8 border-gray-300 relative overflow-hidden transition-transform duration-3000 ease-out ${isSpinning ? 'animate-spin' : ''}`}
+                className={`w-80 h-80 rounded-full border-8 border-gray-300 relative overflow-hidden transition-transform duration-3000 ease-out ${isSpinning ? 'animate-spin' : ''}`}
                 style={{ transform: `rotate(${wheelRotation}deg)` }}
               >
                 {wheelSegments.map((segment, index) => {
@@ -206,14 +207,14 @@ const SpinWinGame = () => {
                         clipPath: 'polygon(0 0, 100% 0, 50% 100%)',
                       }}
                     >
-                      <span className="text-lg">{segment.multiplier}x</span>
+                      <span className="text-xl">{segment.multiplier}x</span>
                     </div>
                   );
                 })}
               </div>
               {/* Pointer */}
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2">
-                <div className="w-0 h-0 border-l-4 border-r-4 border-b-8 border-l-transparent border-r-transparent border-b-red-600"></div>
+                <div className="w-0 h-0 border-l-6 border-r-6 border-b-10 border-l-transparent border-r-transparent border-b-red-600"></div>
               </div>
             </div>
           </div>
@@ -244,7 +245,7 @@ const SpinWinGame = () => {
           {/* Multiplier Legend */}
           <div>
             <h4 className="font-medium mb-2">Multipliers:</h4>
-            <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
               {wheelSegments.map(segment => (
                 <div key={segment.multiplier} className="text-center">
                   <div className={`w-8 h-8 ${segment.color} rounded mx-auto mb-1`}></div>
