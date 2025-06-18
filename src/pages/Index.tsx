@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from '@/components/ui/sidebar';
-import { TrendingUp, User, Cricket, Gamepad2 } from 'lucide-react';
+import { TrendingUp, User, Trophy, Gamepad2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import NumberPredictionGame from '@/components/NumberPredictionGame';
@@ -22,7 +22,7 @@ const Index = () => {
     {
       id: 'cricket-betting',
       title: 'Cricket Betting',
-      icon: Cricket,
+      icon: Trophy,
       component: CricketBettingGame
     },
     {

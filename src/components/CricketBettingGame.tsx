@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Cricket } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface OverStats {
@@ -117,7 +116,7 @@ const CricketBettingGame = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Cricket className="h-5 w-5" />
+            <Trophy className="h-5 w-5" />
             Cricket Betting Setup
           </CardTitle>
         </CardHeader>
