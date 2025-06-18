@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Gamepad2 } from 'lucide-react';
@@ -44,20 +43,27 @@ const SpinWinGame = () => {
     setIsSpinning(true);
     setWalletBalance(prev => prev - betAmount);
 
-    // Animate wheel
-    const spins = 5 + Math.random() * 5; // 5-10 full rotations
-    const finalRotation = wheelRotation + (spins * 360);
+    // Smoother animation with more realistic physics
+    const baseSpins = 8 + Math.random() * 4; // 8-12 full rotations
+    const finalRotation = wheelRotation + (baseSpins * 360) + Math.random() * 360;
     setWheelRotation(finalRotation);
 
-    // Wait for animation
+    // Wait for smoother animation
     setTimeout(() => {
       const multiplier = getRandomMultiplier();
       let winAmount = 0;
       let actualWin = false;
 
-      // High multiplier control: users won't win on 15x or higher
-      if (multiplier >= 15) {
-        // They don't win, but we show the animation
+      if (multiplier === 0) {
+        // 0x means no win
+        winAmount = 0;
+        toast({
+          title: "Better Luck Next Time!",
+          description: "You got 0x - no win this time!",
+          variant: "destructive",
+        });
+      } else if (multiplier >= 15) {
+        // High multiplier control: users won't win on 15x or higher
         winAmount = 0;
         toast({
           title: "Almost!",
@@ -94,7 +100,7 @@ const SpinWinGame = () => {
 
       setSpinResults(prev => [result, ...prev.slice(0, 9)]);
       setIsSpinning(false);
-    }, 3000);
+    }, 4000); // Increased timeout to match smoother animation
   };
 
   // Reset daily earnings at midnight (simplified)
@@ -131,9 +137,9 @@ const SpinWinGame = () => {
         onAddMoney={handleAddMoney}
       />
 
-      <Card>
+      <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-purple-800">
             <Gamepad2 className="h-5 w-5" />
             Spin & Win
           </CardTitle>
