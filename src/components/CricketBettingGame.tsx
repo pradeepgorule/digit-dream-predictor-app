@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Trophy } from 'lucide-react';
+import { Trophy, SkipForward } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,6 +18,7 @@ interface OverStats {
     foursBet?: number;
     outBet?: number;
   };
+  isSkipped?: boolean;
 }
 
 const CricketBettingGame = () => {
@@ -34,7 +36,8 @@ const CricketBettingGame = () => {
         sixes: 0,
         fours: 0,
         isOut: false,
-        bets: {}
+        bets: {},
+        isSkipped: false
       });
     }
     setOvers(newOvers);
@@ -42,15 +45,6 @@ const CricketBettingGame = () => {
   };
 
   const placeBet = (overIndex: number, betType: 'sixes' | 'fours' | 'out', amount: number) => {
-    if (!deductMoney(amount)) {
-      toast({
-        title: "Insufficient Balance",
-        description: `Please add money to your wallet. Required: ₹${amount}`,
-        variant: "destructive",
-      });
-      return;
-    }
-
     setOvers(prev => {
       const updated = [...prev];
       updated[overIndex].bets = {
@@ -67,6 +61,19 @@ const CricketBettingGame = () => {
   };
 
   const simulateOver = (overIndex: number) => {
+    const over = overs[overIndex];
+    const totalBetAmount = (over.bets.sixesBet || 0) + (over.bets.foursBet || 0) + (over.bets.outBet || 0);
+    
+    // Deduct money only when playing the over
+    if (totalBetAmount > 0 && !deductMoney(totalBetAmount)) {
+      toast({
+        title: "Insufficient Balance",
+        description: `Please add money to your wallet. Required: ₹${totalBetAmount}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     const sixes = Math.floor(Math.random() * 3); // 0-2 sixes
     const fours = Math.floor(Math.random() * 4); // 0-3 fours
     const isOut = Math.random() < 0.1; // 10% chance of getting out
@@ -83,7 +90,6 @@ const CricketBettingGame = () => {
     });
 
     // Calculate winnings
-    const over = overs[overIndex];
     let winnings = 0;
     
     if (over.bets.sixesBet && sixes > 0) {
@@ -108,6 +114,26 @@ const CricketBettingGame = () => {
       title: `Over ${overIndex + 1} Complete`,
       description: `${sixes} sixes, ${fours} fours${isOut ? ', Player Out!' : ''}`,
     });
+
+    setCurrentOver(prev => prev + 1);
+  };
+
+  const skipOver = (overIndex: number) => {
+    setOvers(prev => {
+      const updated = [...prev];
+      updated[overIndex] = {
+        ...updated[overIndex],
+        isSkipped: true
+      };
+      return updated;
+    });
+
+    toast({
+      title: "Over Skipped",
+      description: `Over ${overIndex + 1} has been skipped`,
+    });
+
+    setCurrentOver(prev => prev + 1);
   };
 
   return (
@@ -157,101 +183,115 @@ const CricketBettingGame = () => {
           {overs.map((over, index) => (
             <Card key={over.overNumber} className={`${index < currentOver - 1 ? 'opacity-60' : ''}`}>
               <CardHeader>
-                <CardTitle className="text-lg">Over {over.overNumber}</CardTitle>
+                <CardTitle className="text-lg flex items-center justify-between">
+                  Over {over.overNumber}
+                  {over.isSkipped && <Badge variant="secondary">Skipped</Badge>}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {/* Stats Display */}
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Results:</h4>
-                    <div className="text-sm space-y-1">
-                      <div>Sixes: {over.sixes}</div>
-                      <div>Fours: {over.fours}</div>
-                      <div>Out: {over.isOut ? 'Yes' : 'No'}</div>
+                {!over.isSkipped ? (
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {/* Stats Display */}
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Results:</h4>
+                      <div className="text-sm space-y-1">
+                        <div>Sixes: {over.sixes}</div>
+                        <div>Fours: {over.fours}</div>
+                        <div>Out: {over.isOut ? 'Yes' : 'No'}</div>
+                      </div>
+                    </div>
+
+                    {/* Betting Controls */}
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Bet on Sixes:</h4>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => placeBet(index, 'sixes', 10)}
+                          disabled={index < currentOver - 1}
+                        >
+                          ₹10
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => placeBet(index, 'sixes', 50)}
+                          disabled={index < currentOver - 1}
+                        >
+                          ₹50
+                        </Button>
+                      </div>
+                      {over.bets.sixesBet && <Badge>Bet: ₹{over.bets.sixesBet}</Badge>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Bet on Fours:</h4>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => placeBet(index, 'fours', 10)}
+                          disabled={index < currentOver - 1}
+                        >
+                          ₹10
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => placeBet(index, 'fours', 50)}
+                          disabled={index < currentOver - 1}
+                        >
+                          ₹50
+                        </Button>
+                      </div>
+                      {over.bets.foursBet && <Badge>Bet: ₹{over.bets.foursBet}</Badge>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Bet on Out:</h4>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => placeBet(index, 'out', 20)}
+                          disabled={index < currentOver - 1}
+                        >
+                          ₹20
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => placeBet(index, 'out', 100)}
+                          disabled={index < currentOver - 1}
+                        >
+                          ₹100
+                        </Button>
+                      </div>
+                      {over.bets.outBet && <Badge>Bet: ₹{over.bets.outBet}</Badge>}
                     </div>
                   </div>
-
-                  {/* Betting Controls */}
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Bet on Sixes:</h4>
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => placeBet(index, 'sixes', 10)}
-                        disabled={index < currentOver - 1}
-                      >
-                        ₹10
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => placeBet(index, 'sixes', 50)}
-                        disabled={index < currentOver - 1}
-                      >
-                        ₹50
-                      </Button>
-                    </div>
-                    {over.bets.sixesBet && <Badge>Bet: ₹{over.bets.sixesBet}</Badge>}
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    This over was skipped
                   </div>
+                )}
 
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Bet on Fours:</h4>
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => placeBet(index, 'fours', 10)}
-                        disabled={index < currentOver - 1}
-                      >
-                        ₹10
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => placeBet(index, 'fours', 50)}
-                        disabled={index < currentOver - 1}
-                      >
-                        ₹50
-                      </Button>
-                    </div>
-                    {over.bets.foursBet && <Badge>Bet: ₹{over.bets.foursBet}</Badge>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Bet on Out:</h4>
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => placeBet(index, 'out', 20)}
-                        disabled={index < currentOver - 1}
-                      >
-                        ₹20
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => placeBet(index, 'out', 100)}
-                        disabled={index < currentOver - 1}
-                      >
-                        ₹100
-                      </Button>
-                    </div>
-                    {over.bets.outBet && <Badge>Bet: ₹{over.bets.outBet}</Badge>}
-                  </div>
-                </div>
-
-                {/* Simulate Button */}
+                {/* Action Buttons */}
                 {index === currentOver - 1 && (
-                  <div className="mt-4">
+                  <div className="mt-4 flex gap-2">
                     <Button 
-                      onClick={() => {
-                        simulateOver(index);
-                        setCurrentOver(prev => prev + 1);
-                      }}
+                      onClick={() => simulateOver(index)}
                     >
                       Play Over {over.overNumber}
+                    </Button>
+                    <Button 
+                      onClick={() => skipOver(index)}
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      <SkipForward className="h-4 w-4" />
+                      Skip Over
                     </Button>
                   </div>
                 )}
