@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { User, Trophy, TrendingUp, Gamepad2, History } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileNavigation from '@/components/MobileNavigation';
 
 interface GameHistoryItem {
   id: string;
@@ -65,6 +66,7 @@ const mockGameHistory: GameHistoryItem[] = [
 
 const Profile = () => {
   const { walletBalance } = useWallet();
+  const isMobile = useIsMobile();
 
   const getGameIcon = (game: string) => {
     switch (game) {
@@ -87,7 +89,7 @@ const Profile = () => {
   const totalBetAmount = mockGameHistory.reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+    <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 ${isMobile ? 'pb-20' : ''}`}>
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Profile Header */}
         <Card>
@@ -180,6 +182,11 @@ const Profile = () => {
           </CardContent>
         </Card>
       </div>
+
+      <MobileNavigation 
+        activeGame="" 
+        onGameChange={() => {}} 
+      />
     </div>
   );
 };
