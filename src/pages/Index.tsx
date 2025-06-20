@@ -78,14 +78,24 @@ const Index = () => {
                     {games.find(game => game.id === activeGame)?.title}
                   </h2>
                 </div>
-                <Button 
-                  onClick={() => navigate('/login')}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <User className="h-4 w-4" />
-                  Login
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    onClick={() => navigate('/profile')}
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <User className="h-4 w-4" />
+                    Profile
+                  </Button>
+                  <Button 
+                    onClick={() => navigate('/login')}
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <User className="h-4 w-4" />
+                    Login
+                  </Button>
+                </div>
               </div>
             </div>
 
