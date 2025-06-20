@@ -5,6 +5,7 @@ import JodiInput from '@/components/JodiInput';
 import PredictionHistory from '@/components/PredictionHistory';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import WalletComponent from '@/components/Wallet';
+import { useWallet } from '@/contexts/WalletContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface Prediction {
@@ -16,12 +17,12 @@ interface Prediction {
 }
 
 const NumberPredictionGame = () => {
+  const { walletBalance, deductMoney, addMoney } = useWallet();
   const [selectedSingle, setSelectedSingle] = useState<number | null>(null);
   const [jodiValue, setJodiValue] = useState('');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [latestSingle, setLatestSingle] = useState<number | null>(null);
   const [latestJodi, setLatestJodi] = useState<string | null>(null);
-  const [walletBalance, setWalletBalance] = useState(0);
   const { toast } = useToast();
 
   const addPrediction = (type: 'single' | 'jodi', number: string, betAmount: number) => {
@@ -36,11 +37,11 @@ const NumberPredictionGame = () => {
   };
 
   const handleAddMoney = (amount: number) => {
-    setWalletBalance(prev => prev + amount);
+    addMoney(amount);
   };
 
   const handleSinglePredict = (betAmount: number) => {
-    if (walletBalance < betAmount) {
+    if (!deductMoney(betAmount)) {
       toast({
         title: "Insufficient Balance",
         description: `Please add money to your wallet. Required: ₹${betAmount}`,
@@ -52,7 +53,6 @@ const NumberPredictionGame = () => {
     if (selectedSingle !== null) {
       addPrediction('single', selectedSingle.toString(), betAmount);
       setLatestSingle(selectedSingle);
-      setWalletBalance(prev => prev - betAmount);
       toast({
         title: "Single Number Predicted!",
         description: `Your prediction: ${selectedSingle} with ₹${betAmount} bet`,
@@ -61,7 +61,7 @@ const NumberPredictionGame = () => {
   };
 
   const handleJodiPredict = (betAmount: number) => {
-    if (walletBalance < betAmount) {
+    if (!deductMoney(betAmount)) {
       toast({
         title: "Insufficient Balance",
         description: `Please add money to your wallet. Required: ₹${betAmount}`,
@@ -75,7 +75,6 @@ const NumberPredictionGame = () => {
       addPrediction('jodi', formattedJodi, betAmount);
       setLatestJodi(formattedJodi);
       setJodiValue('');
-      setWalletBalance(prev => prev - betAmount);
       toast({
         title: "Jodi Number Predicted!",
         description: `Your prediction: ${formattedJodi} with ₹${betAmount} bet`,

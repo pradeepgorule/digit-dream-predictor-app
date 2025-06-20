@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Gamepad2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useWallet } from '@/contexts/WalletContext';
 import { SpinResult } from '@/types/spinGame';
 import { getRandomMultiplier } from '@/utils/wheelUtils';
 import GameStats from '@/components/GameStats';
@@ -11,7 +13,7 @@ import MultiplierLegend from '@/components/MultiplierLegend';
 import RecentResults from '@/components/RecentResults';
 
 const SpinWinGame = () => {
-  const [walletBalance, setWalletBalance] = useState(0);
+  const { walletBalance, deductMoney, addMoney } = useWallet();
   const [betAmount, setBetAmount] = useState(10);
   const [dailyEarnings, setDailyEarnings] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -22,7 +24,7 @@ const SpinWinGame = () => {
   const MAX_DAILY_EARNINGS = 200;
 
   const spinWheel = async () => {
-    if (walletBalance < betAmount) {
+    if (!deductMoney(betAmount)) {
       toast({
         title: "Insufficient Balance",
         description: `Please add money to your wallet. Required: ₹${betAmount}`,
@@ -41,7 +43,6 @@ const SpinWinGame = () => {
     }
 
     setIsSpinning(true);
-    setWalletBalance(prev => prev - betAmount);
 
     // Smoother animation with more realistic physics
     const baseSpins = 8 + Math.random() * 4; // 8-12 full rotations
@@ -83,7 +84,7 @@ const SpinWinGame = () => {
         }
 
         if (actualWin) {
-          setWalletBalance(prev => prev + winAmount);
+          addMoney(winAmount);
           setDailyEarnings(prev => prev + (winAmount - betAmount));
           toast({
             title: "Congratulations!",
@@ -124,7 +125,7 @@ const SpinWinGame = () => {
   }, [toast]);
 
   const handleAddMoney = () => {
-    setWalletBalance(prev => prev + 100);
+    addMoney(100);
   };
 
   return (

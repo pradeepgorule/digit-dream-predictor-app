@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Trophy } from 'lucide-react';
+import { useWallet } from '@/contexts/WalletContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface OverStats {
@@ -19,10 +20,10 @@ interface OverStats {
 }
 
 const CricketBettingGame = () => {
+  const { walletBalance, deductMoney, addMoney } = useWallet();
   const [totalOvers, setTotalOvers] = useState(20);
   const [currentOver, setCurrentOver] = useState(1);
   const [overs, setOvers] = useState<OverStats[]>([]);
-  const [walletBalance, setWalletBalance] = useState(0);
   const { toast } = useToast();
 
   const initializeOvers = () => {
@@ -41,7 +42,7 @@ const CricketBettingGame = () => {
   };
 
   const placeBet = (overIndex: number, betType: 'sixes' | 'fours' | 'out', amount: number) => {
-    if (walletBalance < amount) {
+    if (!deductMoney(amount)) {
       toast({
         title: "Insufficient Balance",
         description: `Please add money to your wallet. Required: ₹${amount}`,
@@ -59,7 +60,6 @@ const CricketBettingGame = () => {
       return updated;
     });
 
-    setWalletBalance(prev => prev - amount);
     toast({
       title: "Bet Placed!",
       description: `₹${amount} bet on ${betType} for Over ${overIndex + 1}`,
@@ -97,7 +97,7 @@ const CricketBettingGame = () => {
     }
 
     if (winnings > 0) {
-      setWalletBalance(prev => prev + winnings);
+      addMoney(winnings);
       toast({
         title: "You Won!",
         description: `Won ₹${winnings} from Over ${overIndex + 1}`,
@@ -142,7 +142,7 @@ const CricketBettingGame = () => {
               <Button 
                 variant="outline" 
                 className="ml-2"
-                onClick={() => setWalletBalance(prev => prev + 100)}
+                onClick={() => addMoney(100)}
               >
                 Add ₹100
               </Button>
