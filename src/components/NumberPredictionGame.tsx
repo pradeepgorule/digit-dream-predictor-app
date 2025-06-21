@@ -5,6 +5,7 @@ import JodiInput from '@/components/JodiInput';
 import PredictionHistory from '@/components/PredictionHistory';
 import ResultsDisplay from '@/components/ResultsDisplay';
 import WalletComponent from '@/components/Wallet';
+import PopularNumbersBanner from '@/components/PopularNumbersBanner';
 import { useWallet } from '@/contexts/WalletContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -84,6 +85,9 @@ const NumberPredictionGame = () => {
 
   return (
     <div className="space-y-6">
+      {/* Popular Numbers Banner */}
+      <PopularNumbersBanner />
+
       {/* Wallet and Results Display */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <WalletComponent balance={walletBalance} onAddMoney={handleAddMoney} />
