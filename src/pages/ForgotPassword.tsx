@@ -4,33 +4,31 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { TrendingUp } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { TrendingUp, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleResetPassword = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation for demo purposes
-    if (email && password) {
+    if (!email) {
       toast({
-        title: "Login Successful!",
-        description: "Welcome to Number Prediction Hub",
-      });
-      navigate('/');
-    } else {
-      toast({
-        title: "Login Failed",
-        description: "Please enter both email and password",
+        title: "Reset Failed",
+        description: "Please enter your email address",
         variant: "destructive",
       });
+      return;
     }
+
+    toast({
+      title: "Reset Link Sent!",
+      description: "Check your email for password reset instructions",
+    });
+    setEmail('');
   };
 
   return (
@@ -42,14 +40,17 @@ const Login = () => {
               <TrendingUp className="h-6 w-6 text-white" />
             </div>
             <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              User Login
+              Reset Password
             </CardTitle>
           </div>
+          <p className="text-sm text-gray-600 mt-2">
+            Enter your email address and we'll send you a link to reset your password.
+          </p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleResetPassword} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 type="email"
@@ -59,37 +60,19 @@ const Login = () => {
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="text-right">
-              <Link 
-                to="/forgot-password" 
-                className="text-sm text-purple-600 hover:text-purple-700"
-              >
-                Forgot Password?
-              </Link>
-            </div>
             <Button type="submit" className="w-full">
-              Login
+              Send Reset Link
             </Button>
           </form>
           
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-purple-600 hover:text-purple-700 font-semibold">
-                Sign up here
-              </Link>
-            </p>
+            <Link 
+              to="/login" 
+              className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-semibold text-sm"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Login
+            </Link>
           </div>
         </CardContent>
       </Card>
@@ -97,4 +80,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
