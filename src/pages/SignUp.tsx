@@ -8,7 +8,6 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { TrendingUp, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
 import api from '../services/api';
 
 const SignUp = () => {
@@ -22,7 +21,7 @@ const SignUp = () => {
   });
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { login } = useAuth();
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -33,7 +32,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Simple validation for demo purposes
     if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
       toast({
@@ -56,17 +55,19 @@ const SignUp = () => {
     try {
       // For demo purposes, we'll just proceed to OTP step
       // In a real app, you would send the signup data to your backend here
-      console.log('Sending signup request:', {
+      const data = api.post('//auth/signup', {
         name: formData.fullName,
         email: formData.email,
         password: formData.password
-      });
+      })
+
+      console.log(data);
 
       toast({
         title: "OTP Sent!",
         description: "Please check your email for the verification code",
       });
-      
+
       setStep('otp');
     } catch (error) {
       toast({
@@ -92,13 +93,13 @@ const SignUp = () => {
       // In a real app, you would verify the OTP with your backend
       console.log('Verifying OTP:', otp);
 
-      login();
-      
+      // login();
+
       toast({
         title: "Registration Successful!",
         description: "Welcome to Number Prediction Hub",
       });
-      
+
       navigate('/');
     } catch (error) {
       toast({
@@ -183,7 +184,7 @@ const SignUp = () => {
                   Sign Up
                 </Button>
               </form>
-              
+
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">
                   Already have an account?{' '}
@@ -224,16 +225,16 @@ const SignUp = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <Button 
-                    onClick={handleOtpVerification} 
+                  <Button
+                    onClick={handleOtpVerification}
                     className="w-full"
                     disabled={otp.length !== 6}
                   >
                     Verify & Complete Registration
                   </Button>
-                  
-                  <Button 
-                    variant="ghost" 
+
+                  <Button
+                    variant="ghost"
                     onClick={handleBackToForm}
                     className="w-full"
                   >
