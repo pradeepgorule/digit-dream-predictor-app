@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import api from '../services/api'; // Adjust the import path as necessary
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -47,6 +48,14 @@ const SignUp = () => {
       return;
     }
 
+
+   const data= api.post('/auth/signup', {
+      name: formData.fullName,
+      email: formData.email,
+      password: formData.password
+    })
+    
+    console.log(data);
     toast({
       title: "Registration Successful!",
       description: "Welcome to Number Prediction Hub",
