@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { User, Trophy, TrendingUp, Gamepad2, History } from 'lucide-react';
+import { User, Trophy, TrendingUp, Gamepad2, History, Wallet } from 'lucide-react';
 import { useWallet } from '@/contexts/WalletContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileNavigation from '@/components/MobileNavigation';
@@ -102,10 +103,17 @@ const Profile = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                <div className="flex items-center justify-center mb-2">
+                  <Wallet className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="text-2xl font-bold text-green-600">₹{walletBalance}</div>
+                <div className="text-sm text-gray-600">Wallet Balance</div>
+              </div>
               <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">₹{walletBalance}</div>
-                <div className="text-sm text-gray-600">Current Balance</div>
+                <div className="text-2xl font-bold text-blue-600">₹{totalBetAmount}</div>
+                <div className="text-sm text-gray-600">Total Bets</div>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">{totalWins}</div>
