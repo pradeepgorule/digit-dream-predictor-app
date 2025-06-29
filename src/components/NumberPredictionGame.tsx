@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { Trophy } from 'lucide-react';
 import NumberGrid from '@/components/NumberGrid';
 import JodiInput from '@/components/JodiInput';
 import PredictionHistory from '@/components/PredictionHistory';
