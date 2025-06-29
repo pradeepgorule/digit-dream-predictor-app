@@ -4,6 +4,7 @@ import NumberGrid from '@/components/NumberGrid';
 import JodiInput from '@/components/JodiInput';
 import PredictionHistory from '@/components/PredictionHistory';
 import ResultsDisplay from '@/components/ResultsDisplay';
+import ResultsDeclaration from '@/components/ResultsDeclaration';
 import WalletComponent from '@/components/Wallet';
 import PopularNumbersBanner from '@/components/PopularNumbersBanner';
 import { useWallet } from '@/contexts/WalletContext';
@@ -24,6 +25,8 @@ const NumberPredictionGame = () => {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [latestSingle, setLatestSingle] = useState<number | null>(null);
   const [latestJodi, setLatestJodi] = useState<string | null>(null);
+  const [declaredSingle, setDeclaredSingle] = useState<number | null>(null);
+  const [declaredJodi, setDeclaredJodi] = useState<string | null>(null);
   const { toast } = useToast();
 
   const addPrediction = (type: 'single' | 'jodi', number: string, betAmount: number) => {
@@ -39,6 +42,11 @@ const NumberPredictionGame = () => {
 
   const handleAddMoney = (amount: number) => {
     addMoney(amount);
+  };
+
+  const handleResultsDeclared = (singleDigit: number, jodiNumber: string) => {
+    setDeclaredSingle(singleDigit);
+    setDeclaredJodi(jodiNumber);
   };
 
   const handleSinglePredict = (betAmount: number) => {
@@ -88,11 +96,38 @@ const NumberPredictionGame = () => {
       {/* Popular Numbers Banner */}
       <PopularNumbersBanner />
 
+      {/* Results Declaration */}
+      <ResultsDeclaration onResultsDeclared={handleResultsDeclared} />
+
       {/* Wallet and Results Display */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <WalletComponent balance={walletBalance} onAddMoney={handleAddMoney} />
         <ResultsDisplay latestSingle={latestSingle} latestJodi={latestJodi} />
       </div>
+
+      {/* Declared Results Display */}
+      {(declaredSingle !== null || declaredJodi !== null) && (
+        <div className="bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl shadow-lg p-6 text-white">
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <Trophy className="h-6 w-6" />
+            Declared Results
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="text-center">
+              <h4 className="font-semibold mb-2">Winning Single Digit</h4>
+              <div className="text-4xl font-bold bg-white/20 rounded-lg py-4">
+                {declaredSingle !== null ? declaredSingle : '?'}
+              </div>
+            </div>
+            <div className="text-center">
+              <h4 className="font-semibold mb-2">Winning Jodi Number</h4>
+              <div className="text-4xl font-bold bg-white/20 rounded-lg py-4">
+                {declaredJodi || '??'}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Prediction Controls */}
