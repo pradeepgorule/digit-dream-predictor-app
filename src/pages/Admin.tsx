@@ -1,257 +1,165 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { BarChart3, Users, TrendingDown, Hash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { BarChart3, Users, TrendingUp, Shield, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-interface Prediction {
-  id: string;
-  type: 'single' | 'jodi';
-  number: string;
-  betAmount: number;
-  timestamp: Date;
-}
+const Admin = () => {
+  const navigate = useNavigate();
 
-interface AdminProps {
-  predictions: Prediction[];
-}
-
-const Admin = ({ predictions }: AdminProps) => {
-  // Analyze single number predictions
-  const singleNumberStats = React.useMemo(() => {
-    const stats: Record<string, { count: number; totalBets: number }> = {};
-    
-    // Initialize all numbers 0-9
-    for (let i = 0; i <= 9; i++) {
-      stats[i.toString()] = { count: 0, totalBets: 0 };
+  const adminFeatures = [
+    {
+      title: 'Dashboard',
+      description: 'View analytics and prediction statistics',
+      icon: BarChart3,
+      path: '/admin/dashboard',
+      color: 'from-blue-600 to-purple-600'
+    },
+    {
+      title: 'User Management',
+      description: 'Manage users and wallet balances',
+      icon: Users,
+      path: '/admin/users',
+      color: 'from-green-600 to-blue-600'
+    },
+    {
+      title: 'Analytics',
+      description: 'View detailed reports and trends',
+      icon: TrendingUp,
+      path: '/admin/analytics',
+      color: 'from-orange-600 to-red-600'
     }
-    
-    predictions
-      .filter(p => p.type === 'single')
-      .forEach(p => {
-        stats[p.number].count++;
-        stats[p.number].totalBets += p.betAmount;
-      });
-    
-    return Object.entries(stats).map(([number, data]) => ({
-      number,
-      count: data.count,
-      totalBets: data.totalBets,
-      avgBet: data.count > 0 ? Math.round(data.totalBets / data.count) : 0
-    })).sort((a, b) => a.count - b.count); // Sort by count ascending (low predictions first)
-  }, [predictions]);
+  ];
 
-  // Analyze jodi number predictions
-  const jodiNumberStats = React.useMemo(() => {
-    const stats: Record<string, { count: number; totalBets: number }> = {};
-    
-    predictions
-      .filter(p => p.type === 'jodi')
-      .forEach(p => {
-        if (!stats[p.number]) {
-          stats[p.number] = { count: 0, totalBets: 0 };
-        }
-        stats[p.number].count++;
-        stats[p.number].totalBets += p.betAmount;
-      });
-    
-    return Object.entries(stats).map(([number, data]) => ({
-      number,
-      count: data.count,
-      totalBets: data.totalBets,
-      avgBet: Math.round(data.totalBets / data.count)
-    })).sort((a, b) => a.count - b.count); // Sort by count ascending (low predictions first)
-  }, [predictions]);
-
-  const totalSinglePredictions = predictions.filter(p => p.type === 'single').length;
-  const totalJodiPredictions = predictions.filter(p => p.type === 'jodi').length;
-  const totalBetAmount = predictions.reduce((sum, p) => sum + p.betAmount, 0);
-
-  // Get numbers with zero or very low predictions
-  const lowSingleNumbers = singleNumberStats.filter(s => s.count <= 1);
-  const lowJodiNumbers = jodiNumberStats.filter(s => s.count <= 1);
+  const handleLogout = () => {
+    navigate('/admin-login');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg">
-              <BarChart3 className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg">
+                <Shield className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                Admin Panel
+              </h1>
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-              Admin Dashboard
-            </h1>
+            <Button 
+              onClick={handleLogout}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Admin Panel</h2>
+          <p className="text-gray-600">Manage your gaming platform from here</p>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Single Predictions</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">Total Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{totalSinglePredictions}</div>
+              <div className="text-2xl font-bold text-blue-600">1,234</div>
+              <p className="text-xs text-gray-500">+12% from last month</p>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Jodi Predictions</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">Active Games</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">{totalJodiPredictions}</div>
+              <div className="text-2xl font-bold text-green-600">56</div>
+              <p className="text-xs text-gray-500">Currently running</p>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Bet Amount</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">₹{totalBetAmount}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Low Prediction Numbers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">{lowSingleNumbers.length + lowJodiNumbers.length}</div>
+              <div className="text-2xl font-bold text-purple-600">₹45,230</div>
+              <p className="text-xs text-gray-500">This month</p>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Single Number Analytics */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Hash className="h-5 w-5 text-blue-600" />
-                Single Number Analytics (0-9)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Number</TableHead>
-                    <TableHead>Predictions</TableHead>
-                    <TableHead>Total Bets</TableHead>
-                    <TableHead>Avg Bet</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {singleNumberStats.map((stat) => (
-                    <TableRow 
-                      key={stat.number}
-                      className={stat.count <= 1 ? 'bg-red-50 text-red-800' : ''}
-                    >
-                      <TableCell className="font-bold">{stat.number}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {stat.count}
-                          {stat.count <= 1 && <TrendingDown className="h-4 w-4 text-red-500" />}
-                        </div>
-                      </TableCell>
-                      <TableCell>₹{stat.totalBets}</TableCell>
-                      <TableCell>₹{stat.avgBet}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-
-          {/* Jodi Number Analytics */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-purple-600" />
-                Jodi Number Analytics (00-99)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {jodiNumberStats.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No jodi predictions yet</p>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Number</TableHead>
-                      <TableHead>Predictions</TableHead>
-                      <TableHead>Total Bets</TableHead>
-                      <TableHead>Avg Bet</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {jodiNumberStats.map((stat) => (
-                      <TableRow 
-                        key={stat.number}
-                        className={stat.count <= 1 ? 'bg-red-50 text-red-800' : ''}
-                      >
-                        <TableCell className="font-bold">{stat.number}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            {stat.count}
-                            {stat.count <= 1 && <TrendingDown className="h-4 w-4 text-red-500" />}
-                          </div>
-                        </TableCell>
-                        <TableCell>₹{stat.totalBets}</TableCell>
-                        <TableCell>₹{stat.avgBet}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
+        {/* Admin Features */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {adminFeatures.map((feature) => (
+            <Card key={feature.title} className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 bg-gradient-to-r ${feature.color} rounded-lg`}>
+                    <feature.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">{feature.title}</CardTitle>
+                    <p className="text-sm text-gray-600 mt-1">{feature.description}</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  onClick={() => navigate(feature.path)}
+                  className={`w-full bg-gradient-to-r ${feature.color} hover:opacity-90`}
+                >
+                  Access {feature.title}
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Low Prediction Alert */}
-        {(lowSingleNumbers.length > 0 || lowJodiNumbers.length > 0) && (
-          <Card className="mt-8 border-red-200 bg-red-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-800">
-                <TrendingDown className="h-5 w-5" />
-                Numbers with Low Predictions (≤1 prediction)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {lowSingleNumbers.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-red-700 mb-2">Single Numbers:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {lowSingleNumbers.map(stat => (
-                        <span key={stat.number} className="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm">
-                          {stat.number} ({stat.count} predictions)
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {lowJodiNumbers.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-red-700 mb-2">Jodi Numbers:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {lowJodiNumbers.map(stat => (
-                        <span key={stat.number} className="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm">
-                          {stat.number} ({stat.count} predictions)
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+        {/* Recent Activity */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between py-2 border-b">
+                <div>
+                  <p className="font-medium">New user registration</p>
+                  <p className="text-sm text-gray-600">john.doe@example.com</p>
+                </div>
+                <span className="text-sm text-gray-500">2 minutes ago</span>
               </div>
-            </CardContent>
-          </Card>
-        )}
+              <div className="flex items-center justify-between py-2 border-b">
+                <div>
+                  <p className="font-medium">Game result declared</p>
+                  <p className="text-sm text-gray-600">Single: 7, Jodi: 45</p>
+                </div>
+                <span className="text-sm text-gray-500">15 minutes ago</span>
+              </div>
+              <div className="flex items-center justify-between py-2">
+                <div>
+                  <p className="font-medium">Wallet balance updated</p>
+                  <p className="text-sm text-gray-600">User: jane.smith@example.com</p>
+                </div>
+                <span className="text-sm text-gray-500">1 hour ago</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
