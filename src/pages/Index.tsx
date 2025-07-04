@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Wallet } from "@/components/Wallet";
-import { NumberPredictionGame } from "@/components/NumberPredictionGame";
-import { CricketBettingGame } from "@/components/CricketBettingGame";
-import { SpinWinGame } from "@/components/SpinWinGame";
+import Wallet from "@/components/Wallet";
+import NumberPredictionGame from "@/components/NumberPredictionGame";
+import CricketBettingGame from "@/components/CricketBettingGame";
+import SpinWinGame from "@/components/SpinWinGame";
 import { useAuth } from "@/contexts/AuthContext";
 import { Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
