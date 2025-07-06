@@ -1,10 +1,13 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { BarChart3, Users, TrendingDown, Hash, LogOut } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { BarChart3, Users, TrendingDown, Hash, LogOut, Trophy, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import ResultsDeclaration from '@/components/ResultsDeclaration';
 
 // Mock data for demonstration - in a real app this would come from your backend
 const mockPredictions = [
@@ -15,6 +18,7 @@ const mockPredictions = [
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   // Analyze single number predictions
   const singleNumberStats = React.useMemo(() => {
@@ -69,6 +73,15 @@ const AdminDashboard = () => {
   const lowSingleNumbers = singleNumberStats.filter(s => s.count <= 1);
   const lowJodiNumbers = jodiNumberStats.filter(s => s.count <= 1);
 
+  const handleResultsDeclared = (singleDigit: number, jodiNumber: string) => {
+    console.log(`Results declared - Single: ${singleDigit}, Jodi: ${jodiNumber}`);
+    // Here you would typically save the results to your backend
+    toast({
+      title: "Results Declared Successfully!",
+      description: `Single: ${singleDigit}, Jodi: ${jodiNumber}`,
+    });
+  };
+
   const handleLogout = () => {
     navigate('/admin-login');
   };
@@ -100,6 +113,11 @@ const AdminDashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Results Declaration Section */}
+        <div className="mb-8">
+          <ResultsDeclaration onResultsDeclared={handleResultsDeclared} />
+        </div>
+
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
