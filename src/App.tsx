@@ -16,6 +16,7 @@ import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUserManagement from "./pages/AdminUserManagement";
 import Profile from "./pages/Profile";
+import GameStatus from "./pages/GameStatus";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/users" element={<AdminUserManagement />} />
+              <Route path="/game-status" element={<GameStatus />} />
               <Route path="/" element={
                 <ProtectedRoute>
                   <Index />
