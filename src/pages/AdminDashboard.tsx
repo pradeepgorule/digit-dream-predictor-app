@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { BarChart3, Users, TrendingDown, Hash, LogOut, Trophy, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+
+import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import ResultsDeclaration from '@/components/ResultsDeclaration';
+import AdminDashboardHeader from '@/components/admin/AdminDashboardHeader';
+import AdminSummaryCards from '@/components/admin/AdminSummaryCards';
+import SingleNumberAnalytics from '@/components/admin/SingleNumberAnalytics';
+import JodiNumberAnalytics from '@/components/admin/JodiNumberAnalytics';
 
 // Mock data for demonstration - in a real app this would come from your backend
 const mockPredictions = [
@@ -17,7 +15,6 @@ const mockPredictions = [
 ];
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   // Analyze single number predictions
@@ -82,35 +79,9 @@ const AdminDashboard = () => {
     });
   };
 
-  const handleLogout = () => {
-    navigate('/admin-login');
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-red-600 to-orange-600 rounded-lg">
-                <BarChart3 className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-                Admin Dashboard
-              </h1>
-            </div>
-            <Button 
-              onClick={handleLogout}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
-          </div>
-        </div>
-      </div>
+      <AdminDashboardHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Results Declaration Section */}
@@ -119,128 +90,19 @@ const AdminDashboard = () => {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Single Predictions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{totalSinglePredictions}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Jodi Predictions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-purple-600">{totalJodiPredictions}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Bet Amount</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">₹{totalBetAmount}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Low Prediction Numbers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">{lowSingleNumbers.length + lowJodiNumbers.length}</div>
-            </CardContent>
-          </Card>
-        </div>
+        <AdminSummaryCards
+          totalSinglePredictions={totalSinglePredictions}
+          totalJodiPredictions={totalJodiPredictions}
+          totalBetAmount={totalBetAmount}
+          lowPredictionNumbers={lowSingleNumbers.length + lowJodiNumbers.length}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Single Number Analytics */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Hash className="h-5 w-5 text-blue-600" />
-                Single Number Analytics (0-9)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Number</TableHead>
-                    <TableHead>Predictions</TableHead>
-                    <TableHead>Total Bets</TableHead>
-                    <TableHead>Avg Bet</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {singleNumberStats.map((stat) => (
-                    <TableRow 
-                      key={stat.number}
-                      className={stat.count <= 1 ? 'bg-red-50 text-red-800' : ''}
-                    >
-                      <TableCell className="font-bold">{stat.number}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {stat.count}
-                          {stat.count <= 1 && <TrendingDown className="h-4 w-4 text-red-500" />}
-                        </div>
-                      </TableCell>
-                      <TableCell>₹{stat.totalBets}</TableCell>
-                      <TableCell>₹{stat.avgBet}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <SingleNumberAnalytics singleNumberStats={singleNumberStats} />
 
           {/* Jodi Number Analytics */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-purple-600" />
-                Jodi Number Analytics (00-99)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {jodiNumberStats.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No jodi predictions yet</p>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Number</TableHead>
-                      <TableHead>Predictions</TableHead>
-                      <TableHead>Total Bets</TableHead>
-                      <TableHead>Avg Bet</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {jodiNumberStats.map((stat) => (
-                      <TableRow 
-                        key={stat.number}
-                        className={stat.count <= 1 ? 'bg-red-50 text-red-800' : ''}
-                      >
-                        <TableCell className="font-bold">{stat.number}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            {stat.count}
-                            {stat.count <= 1 && <TrendingDown className="h-4 w-4 text-red-500" />}
-                          </div>
-                        </TableCell>
-                        <TableCell>₹{stat.totalBets}</TableCell>
-                        <TableCell>₹{stat.avgBet}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
+          <JodiNumberAnalytics jodiNumberStats={jodiNumberStats} />
         </div>
       </div>
     </div>

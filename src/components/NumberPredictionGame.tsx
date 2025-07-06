@@ -118,7 +118,6 @@ const NumberPredictionGame = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
-        {/* Game Header */}
         <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-2xl">
@@ -129,7 +128,6 @@ const NumberPredictionGame = () => {
           </CardHeader>
         </Card>
 
-        {/* Single Number Selection */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -151,7 +149,6 @@ const NumberPredictionGame = () => {
           </CardContent>
         </Card>
 
-        {/* Jodi Number Prediction */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -177,7 +174,6 @@ const NumberPredictionGame = () => {
           </CardContent>
         </Card>
 
-        {/* Betting Controls */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -204,7 +200,6 @@ const NumberPredictionGame = () => {
           </CardContent>
         </Card>
 
-        {/* Recent Predictions */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -244,11 +239,9 @@ const NumberPredictionGame = () => {
         </Card>
       </div>
 
-      {/* Sidebar */}
       <div className="space-y-6">
         <Wallet />
         
-        {/* Game Stats */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
