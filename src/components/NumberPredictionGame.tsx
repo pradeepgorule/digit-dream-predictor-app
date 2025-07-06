@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ const NumberPredictionGame = () => {
   const [jodiNumber, setJodiNumber] = useState('');
   const [betAmount, setBetAmount] = useState(10);
   const [predictions, setPredictions] = useState<any[]>([]);
-  const { walletBalance, updateBalance } = useWallet();
+  const { walletBalance, deductMoney } = useWallet();
   const { toast } = useToast();
 
   const handleNumberSelect = (number: number) => {
@@ -60,6 +61,16 @@ const NumberPredictionGame = () => {
       return;
     }
 
+    const success = deductMoney(betAmount);
+    if (!success) {
+      toast({
+        title: "Insufficient balance",
+        description: "You do not have enough balance to place this bet.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const newPrediction = {
       id: Date.now(),
       type: 'single',
@@ -69,7 +80,6 @@ const NumberPredictionGame = () => {
     };
 
     setPredictions(prev => [...prev, newPrediction]);
-    updateBalance(-betAmount);
     setSelectedNumbers([]);
 
     toast({
@@ -97,6 +107,16 @@ const NumberPredictionGame = () => {
       return;
     }
 
+    const success = deductMoney(betAmount);
+    if (!success) {
+      toast({
+        title: "Insufficient balance",
+        description: "You do not have enough balance to place this bet.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const newPrediction = {
       id: Date.now(),
       type: 'jodi',
@@ -106,7 +126,6 @@ const NumberPredictionGame = () => {
     };
 
     setPredictions(prev => [...prev, newPrediction]);
-    updateBalance(-betAmount);
     setJodiNumber('');
 
     toast({
