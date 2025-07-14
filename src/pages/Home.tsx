@@ -31,7 +31,8 @@ const Home = () => {
       icon: TrendingUp,
       gradient: "from-blue-500 to-purple-500",
       bannerImage: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop",
-      features: ["Single number predictions", "Jodi number betting", "Real-time results", "High multipliers"]
+      features: ["Single number predictions", "Jodi number betting", "Real-time results", "High multipliers"],
+      isComingSoon: false
     },
     {
       title: "Cricket Betting",
@@ -39,7 +40,8 @@ const Home = () => {
       icon: Trophy,
       gradient: "from-green-500 to-blue-500",
       bannerImage: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&h=400&fit=crop",
-      features: ["Over-by-over betting", "Sixes, fours predictions", "Live match simulation", "Dynamic odds"]
+      features: ["Over-by-over betting", "Sixes, fours predictions", "Live match simulation", "Dynamic odds"],
+      isComingSoon: true
     },
     {
       title: "Spin & Win",
@@ -47,7 +49,8 @@ const Home = () => {
       icon: Gamepad2,
       gradient: "from-purple-500 to-pink-500",
       bannerImage: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=800&h=400&fit=crop",
-      features: ["Multiple multipliers", "Daily earning limits", "Instant rewards", "Lucky bonuses"]
+      features: ["Multiple multipliers", "Daily earning limits", "Instant rewards", "Lucky bonuses"],
+      isComingSoon: true
     }
   ];
 
@@ -58,6 +61,15 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
           <div className="text-center space-y-8">
+            {/* Logo */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-white p-6 rounded-full shadow-xl">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                  <Gamepad2 className="h-8 w-8 text-white" />
+                </div>
+              </div>
+            </div>
+
             {/* Current Time */}
             <div className="flex justify-center">
               <CurrentTime />
@@ -112,17 +124,24 @@ const Home = () => {
           <CarouselContent>
             {gameCards.map((game, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <Card className="h-full hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden group">
+                <Card className="h-full hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden group relative">
+                  {/* Coming Soon Badge */}
+                  {game.isComingSoon && (
+                    <div className="absolute top-4 right-4 z-10 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                      Coming Soon
+                    </div>
+                  )}
+
                   {/* Banner Image */}
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={game.bannerImage} 
                       alt={game.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ${game.isComingSoon ? 'grayscale opacity-75' : ''}`}
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-r ${game.gradient} opacity-70`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-r ${game.gradient} ${game.isComingSoon ? 'opacity-50' : 'opacity-70'}`}></div>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="p-4 bg-white/20 rounded-full backdrop-blur-sm">
+                      <div className={`p-4 bg-white/20 rounded-full backdrop-blur-sm ${game.isComingSoon ? 'opacity-60' : ''}`}>
                         <game.icon className="h-10 w-10 text-white" />
                       </div>
                     </div>
@@ -138,8 +157,8 @@ const Home = () => {
                     </p>
                     <ul className="space-y-2">
                       {game.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center text-sm text-gray-500">
-                          <Zap className="h-4 w-4 text-yellow-500 mr-2 flex-shrink-0" />
+                        <li key={idx} className={`flex items-center text-sm ${game.isComingSoon ? 'text-gray-400' : 'text-gray-500'}`}>
+                          <Zap className={`h-4 w-4 mr-2 flex-shrink-0 ${game.isComingSoon ? 'text-gray-400' : 'text-yellow-500'}`} />
                           {feature}
                         </li>
                       ))}
