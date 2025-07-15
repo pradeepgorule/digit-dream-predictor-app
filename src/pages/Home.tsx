@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -353,20 +354,20 @@ const Home = () => {
 
           {/* Additional Notice */}
           <div className="mt-12 text-center">
-            <Card className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-xl border border-orange-500/30 max-w-4xl mx-auto">
+            <Card className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-xl border border-yellow-500/30 max-w-4xl mx-auto">
               <CardContent className="p-8">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <AlertTriangle className="h-8 w-8 text-orange-400 animate-pulse" />
-                  <h3 className="text-2xl font-bold text-white">Important Notice</h3>
-                  <AlertTriangle className="h-8 w-8 text-orange-400 animate-pulse" />
+                  <AlertTriangle className="h-8 w-8 text-yellow-400 animate-pulse" />
+                  <h3 className="text-2xl font-bold text-yellow-300">Important Notice</h3>
+                  <AlertTriangle className="h-8 w-8 text-yellow-400 animate-pulse" />
                 </div>
-                <p className="text-gray-200 text-lg leading-relaxed">
+                <p className="text-yellow-100 text-lg leading-relaxed">
                   These rules are subject to change. Please check back regularly for updates. 
                   By participating in any games, you agree to abide by these rules and any future modifications. 
                   For questions or clarifications, please contact our support team.
                 </p>
                 <div className="mt-6">
-                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold px-4 py-2">
+                  <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold px-4 py-2">
                     Last Updated: {new Date().toLocaleDateString()}
                   </Badge>
                 </div>
@@ -375,6 +376,41 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* Copyright Footer */}
+      <footer className="relative z-10 bg-black/80 backdrop-blur-xl border-t border-purple-500/30 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <Gamepad2 className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                GAME•ZONE
+              </span>
+            </div>
+            
+            <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent w-full max-w-md mx-auto"></div>
+            
+            <div className="space-y-2">
+              <p className="text-gray-300 text-sm">
+                © {new Date().getFullYear()} Game Zone. All rights reserved.
+              </p>
+              <p className="text-gray-400 text-xs">
+                Experience the thrill responsibly. Gaming should be fun and entertaining.
+              </p>
+            </div>
+            
+            <div className="flex items-center justify-center gap-6 text-xs text-gray-500">
+              <span>Privacy Policy</span>
+              <span>•</span>
+              <span>Terms of Service</span>
+              <span>•</span>
+              <span>Responsible Gaming</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
