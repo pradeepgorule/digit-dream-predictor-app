@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Gamepad2, Trophy, Clock, ArrowRight, Sparkles, Zap, Star, Gift, Target, Crown, Flame } from 'lucide-react';
+import { TrendingUp, Gamepad2, Trophy, Clock, ArrowRight, Sparkles, Zap, Star, Gift, Target, Crown, Flame, Shield, BookOpen, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import CurrentTime from '@/components/CurrentTime';
@@ -66,6 +65,42 @@ const Home = () => {
       features: ["🎡 Lucky Wheel", "🎁 Mystery Prizes", "⭐ Bonus Rounds", "💰 Mega Jackpots"],
       isComingSoon: true,
       multiplier: "Coming Soon"
+    }
+  ];
+
+  const gameRules = [
+    {
+      title: "Fair Play Policy",
+      icon: Shield,
+      description: "All games are conducted with complete transparency and fairness",
+      rules: [
+        "Results are generated using certified random number generators",
+        "All transactions are recorded and can be verified",
+        "No manipulation or bias in game outcomes",
+        "Equal opportunity for all players"
+      ]
+    },
+    {
+      title: "Age & Eligibility",
+      icon: BookOpen,
+      description: "Gaming participation requirements and restrictions",
+      rules: [
+        "Must be 18 years or older to participate",
+        "Valid government ID required for verification",
+        "Residents of restricted jurisdictions cannot participate",
+        "Only one account per person allowed"
+      ]
+    },
+    {
+      title: "Responsible Gaming",
+      icon: AlertTriangle,
+      description: "Guidelines for safe and responsible gaming practices",
+      rules: [
+        "Set spending limits and stick to them",
+        "Take regular breaks from gaming",
+        "Never chase losses with bigger bets",
+        "Seek help if gaming becomes problematic"
+      ]
     }
   ];
 
@@ -264,6 +299,80 @@ const Home = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Rules Section */}
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-black text-white mb-6 flex items-center justify-center gap-4">
+              <BookOpen className="h-12 w-12 text-purple-400 animate-pulse" />
+              GAME RULES
+              <BookOpen className="h-12 w-12 text-purple-400 animate-pulse" />
+            </h2>
+            <p className="text-xl text-gray-300">Play responsibly and enjoy the experience</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {gameRules.map((rule, index) => (
+              <Card 
+                key={index}
+                className="relative overflow-hidden bg-black/50 backdrop-blur-xl border border-purple-500/30 hover:border-purple-400/50 transition-all duration-500 group hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
+              >
+                {/* Background Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-all duration-500"></div>
+                
+                {/* Content */}
+                <CardHeader className="relative z-10 text-center pb-4">
+                  <div className="flex justify-center mb-4">
+                    <div className="p-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg">
+                      <rule.icon className="h-8 w-8 text-white" />
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl font-bold text-white mb-2">{rule.title}</CardTitle>
+                  <p className="text-gray-300 text-sm">{rule.description}</p>
+                </CardHeader>
+                
+                <CardContent className="relative z-10 space-y-4">
+                  <div className="space-y-3">
+                    {rule.rules.map((item, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex items-start text-sm text-gray-200 bg-white/5 rounded-lg p-3 backdrop-blur-sm border border-white/10"
+                      >
+                        <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Additional Notice */}
+          <div className="mt-12 text-center">
+            <Card className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-xl border border-orange-500/30 max-w-4xl mx-auto">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <AlertTriangle className="h-8 w-8 text-orange-400 animate-pulse" />
+                  <h3 className="text-2xl font-bold text-white">Important Notice</h3>
+                  <AlertTriangle className="h-8 w-8 text-orange-400 animate-pulse" />
+                </div>
+                <p className="text-gray-200 text-lg leading-relaxed">
+                  These rules are subject to change. Please check back regularly for updates. 
+                  By participating in any games, you agree to abide by these rules and any future modifications. 
+                  For questions or clarifications, please contact our support team.
+                </p>
+                <div className="mt-6">
+                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold px-4 py-2">
+                    Last Updated: {new Date().toLocaleDateString()}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
