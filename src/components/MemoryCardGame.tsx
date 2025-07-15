@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useWallet } from '@/contexts/WalletContext';
 import { toast } from 'sonner';
-import { Shuffle, Timer, Trophy, Apple, Grape, Banana, Cherry, Lemon, Strawberry, Peach, Watermelon } from 'lucide-react';
+import { Shuffle, Timer, Trophy, Apple, Grape, Banana, Cherry, Heart, Star, Zap, Gift } from 'lucide-react';
 
 // Define difficulty levels
 const DIFFICULTY_LEVELS = [
@@ -16,16 +15,16 @@ const DIFFICULTY_LEVELS = [
   { multiplier: 4.00, viewTime: 2000, label: 'Master' }
 ];
 
-// Fruit symbols
+// Fruit and symbol icons
 const FRUIT_SYMBOLS = [
   { icon: Apple, color: 'text-red-500' },
   { icon: Grape, color: 'text-purple-500' },
   { icon: Banana, color: 'text-yellow-500' },
   { icon: Cherry, color: 'text-red-600' },
-  { icon: Lemon, color: 'text-yellow-400' },
-  { icon: Strawberry, color: 'text-pink-500' },
-  { icon: Peach, color: 'text-orange-400' },
-  { icon: Watermelon, color: 'text-green-500' }
+  { icon: Heart, color: 'text-pink-500' },
+  { icon: Star, color: 'text-yellow-400' },
+  { icon: Zap, color: 'text-blue-500' },
+  { icon: Gift, color: 'text-green-500' }
 ];
 
 interface Card {
@@ -251,7 +250,7 @@ const MemoryCardGame = () => {
           {(gameStarted || gameFinished) && (
             <div className="grid grid-cols-4 gap-3">
               {cards.map((card) => {
-                const FruitIcon = FRUIT_SYMBOLS[card.symbol].icon;
+                const SymbolIcon = FRUIT_SYMBOLS[card.symbol].icon;
                 const shouldShow = showingCards || card.isFlipped || card.isMatched;
                 
                 return (
@@ -268,7 +267,7 @@ const MemoryCardGame = () => {
                     `}
                   >
                     {shouldShow ? (
-                      <FruitIcon className={`h-8 w-8 ${FRUIT_SYMBOLS[card.symbol].color}`} />
+                      <SymbolIcon className={`h-8 w-8 ${FRUIT_SYMBOLS[card.symbol].color}`} />
                     ) : (
                       <div className="w-8 h-8 bg-gradient-to-br from-purple-300 to-blue-300 rounded-full opacity-50"></div>
                     )}
