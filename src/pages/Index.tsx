@@ -6,12 +6,13 @@ import Wallet from "@/components/Wallet";
 import NumberPredictionGame from "@/components/NumberPredictionGame";
 import CricketBettingGame from "@/components/CricketBettingGame";
 import SpinWinGame from "@/components/SpinWinGame";
+import MemoryCardGame from "@/components/MemoryCardGame";
 import { useAuth } from "@/contexts/AuthContext";
 import { Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
-  const [activeGame, setActiveGame] = useState<'number' | 'cricket' | 'spin'>('number');
+  const [activeGame, setActiveGame] = useState<'number' | 'cricket' | 'spin' | 'memory'>('number');
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -89,6 +90,13 @@ const Index = () => {
                   >
                     Spin & Win
                   </Button>
+                  <Button
+                    onClick={() => setActiveGame('memory')}
+                    variant={activeGame === 'memory' ? 'default' : 'outline'}
+                    className="flex-1 min-w-0"
+                  >
+                    Memory Cards
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -97,6 +105,7 @@ const Index = () => {
             {activeGame === 'number' && <NumberPredictionGame />}
             {activeGame === 'cricket' && <CricketBettingGame />}
             {activeGame === 'spin' && <SpinWinGame />}
+            {activeGame === 'memory' && <MemoryCardGame />}
           </div>
         </div>
       </div>
