@@ -42,19 +42,19 @@ const App = () => (
               <Route path="/admin/users" element={<AdminUserManagement />} />
               <Route path="/game-status" element={<GameStatus />} />
               <Route path="/memory-game" element={
-                <ProtectedRoute>
+ 
                   <MemoryGame />
-                </ProtectedRoute>
+              
               } />
               <Route path="/" element={
-                <ProtectedRoute>
+                
                   <Index />
-                </ProtectedRoute>
+                
               } />
               <Route path="/profile" element={
-                <ProtectedRoute>
+               
                   <Profile />
-                </ProtectedRoute>
+               
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
